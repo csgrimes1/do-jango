@@ -1,0 +1,31 @@
+version: '3.1'
+
+networks:
+  dojango:
+
+services:
+
+  db:
+    networks:
+      - dojango
+    build:
+      context: ./db
+    environment:
+      POSTGRES_PASSWORD: example
+
+  app:
+    networks:
+      - dojango
+    build:
+      context: ./app
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ./app:/usr/app
+    working_dir: /usr/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: python3 manage.py runserver 0.0.0.0:8000
+    
